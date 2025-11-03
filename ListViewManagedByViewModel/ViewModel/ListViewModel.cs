@@ -20,24 +20,24 @@ namespace ListViewManagedByViewModel.ViewModel
     {
 
         private static readonly ThreadLocal<Random> threadLocalRand = new ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode()));
-        private readonly ListCollectionView _view;
+        //private readonly ListCollectionView _view;
         Sorter sorterInstance = new Sorter();
 
         private List<ItemViewModel> items = new List<ItemViewModel>();
 
-        private MintPlayer.ObservableCollection.ObservableCollection<ItemViewModel> listItems = new MintPlayer.ObservableCollection.ObservableCollection<ItemViewModel>();
-        public MintPlayer.ObservableCollection.ObservableCollection<ItemViewModel> ListItems
-        {
-            get => listItems;
-            set => SetProperty(ref listItems, value);
-        }
-
-        //private ObservableCollection<ItemViewModel> listItems = new ObservableCollection<ItemViewModel>();
-        //public ObservableCollection<ItemViewModel> ListItems
+        //private MintPlayer.ObservableCollection.ObservableCollection<ItemViewModel> listItems = new MintPlayer.ObservableCollection.ObservableCollection<ItemViewModel>();
+        //public MintPlayer.ObservableCollection.ObservableCollection<ItemViewModel> ListItems
         //{
         //    get => listItems;
         //    set => SetProperty(ref listItems, value);
         //}
+
+        private ObservableCollection<ItemViewModel> listItems = new ObservableCollection<ItemViewModel>();
+        public ObservableCollection<ItemViewModel> ListItems
+        {
+            get => listItems;
+            set => SetProperty(ref listItems, value);
+        }
 
         public ListViewModel()
         {
@@ -60,10 +60,10 @@ namespace ListViewManagedByViewModel.ViewModel
                 }
             }
 
-            ListItems.AddRange(items);
-            _view = (ListCollectionView)CollectionViewSource.GetDefaultView(ListItems);
-            _view.CustomSort = sorterInstance;
-            //ListItems = new ObservableCollection<ItemViewModel>(items);
+            //ListItems.AddRange(items);
+            //_view = (ListCollectionView)CollectionViewSource.GetDefaultView(ListItems);
+            //_view.CustomSort = sorterInstance;
+            ListItems = new ObservableCollection<ItemViewModel>(items);
         }
 
         private async Task ResortList()
@@ -73,10 +73,10 @@ namespace ListViewManagedByViewModel.ViewModel
 
             this.UpdateList();
 
-            _view.Refresh();
+            //_view.Refresh();
 
-            //tempList = this.items.AsParallel().AsOrdered().WithDegreeOfParallelism(Environment.ProcessorCount).OrderBy(x => x, sorterInstance).ToList();
-            //this.ListItems = new ObservableCollection<ItemViewModel>(tempList);
+            tempList = this.items.AsParallel().AsOrdered().WithDegreeOfParallelism(Environment.ProcessorCount).OrderBy(x => x, sorterInstance).ToList();
+            this.ListItems = new ObservableCollection<ItemViewModel>(tempList);
             await System.Windows.Threading.Dispatcher.Yield(System.Windows.Threading.DispatcherPriority.ApplicationIdle);
             var collectionTime = sw.ElapsedMilliseconds;
 
@@ -123,15 +123,14 @@ namespace ListViewManagedByViewModel.ViewModel
             });
 
             newItems.AddRange(itemsToAddTab);
-
             items.Clear();
             this.items = newItems;
 
             IEnumerable<ItemViewModel> removedItems = ListItems.Except(items).ToList();
             IEnumerable<ItemViewModel> addedItems = items.Except(ListItems).ToList();
 
-            this.listItems.RemoveRange(removedItems);
-            this.listItems.AddRange(addedItems);
+            //this.listItems.RemoveRange(removedItems);
+            //this.listItems.AddRange(addedItems);
 
         }
 
