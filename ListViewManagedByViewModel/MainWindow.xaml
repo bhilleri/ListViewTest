@@ -1,0 +1,27 @@
+﻿<Window x:Class="ListViewManagedByViewModel.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ListViewManagedByViewModel" xmlns:viewmodel="clr-namespace:ListViewManagedByViewModel.ViewModel"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        Background="#000010">
+    <Window.DataContext>
+        <viewmodel:PageViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="View/ListPageResource.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid MaxHeight="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=ActualHeight}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Control Style="{StaticResource ListPageStyle}" DataContext="{Binding ListViewModel}" Grid.Row="1"/>
+    </Grid>
+</Window>
